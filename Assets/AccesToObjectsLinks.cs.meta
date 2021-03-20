@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: e595c4a5e379b284d90b1d272886f27e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - bigRoadTile: {fileID: 6809719679228265617, guid: 39b8d5222005d764fbe0491dfead7010,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
