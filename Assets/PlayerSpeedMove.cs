@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class PlayerSpeedMove : MonoBehaviour
 {
-    public float multiplayerSpeed;
+    [HideInInspector] public float multiplayerSpeed;
 
     void Start()
     {
-        multiplayerSpeed = 3f;
+        
     }
 
     void Update()
     {
-        
+        multiplayerSpeed = 15f;
     }
 }

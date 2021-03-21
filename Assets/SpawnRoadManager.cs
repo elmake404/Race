@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnRoadManager : MonoBehaviour
 {
     public Transform spawnPoint;
     private AccesToObjectsLinks accesToObjectsLinks;
-    public Vector3 boundsRoadTile;
+    [HideInInspector] public Vector3 boundsRoadTile;
     [HideInInspector] public GameObject lastSpawnedRoadTiles;
     
 

@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bigRoadTile: {fileID: 2514591624626808241}
   CollectBigRoadTiled: {fileID: 1280097962996641392}
+  carSpaawnManager: {fileID: 0}
 --- !u!1001 &789572226814813518
 PrefabInstance:
   m_ObjectHideFlags: 0
