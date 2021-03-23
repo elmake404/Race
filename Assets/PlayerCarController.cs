@@ -25,6 +25,7 @@ public class PlayerCarController : MonoBehaviour
     private Vector3 sizeCastBox;
     private Vector3 centerCastBox;
     private CarPropereties carPropereties;
+    private TimeScaleManager timeScale;
 
 
     void Start()
@@ -35,6 +36,7 @@ public class PlayerCarController : MonoBehaviour
 
         pointsRail = FindObjectOfType<PointsRailControll>();
         accesToObjectsLinks = FindObjectOfType<AccesToObjectsLinks>();
+        timeScale = FindObjectOfType<TimeScaleManager>();
 
 
         SpawnPlayerCar(accesToObjectsLinks.carSpaawnManager.carsList[1], out LinkToCreatedPlayerCar);

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ScaleUpUnderCars : MonoBehaviour
 {
-    
 
+    private TimeScaleManager timeScale;
     private void Start()
     {
-        
+        timeScale = FindObjectOfType<TimeScaleManager>();
     }
     public void CheckCarOnTop(Transform playerCar, Vector3 centerBox, Vector3 sizeBox)
     {
@@ -19,7 +19,7 @@ public class ScaleUpUnderCars : MonoBehaviour
 
                 Debug.Log("Explos");
                 TrafficCarExplosion(hit.transform.GetComponent<Rigidbody>());
-
+                StartCoroutine(timeScale.StartSlowMotion(hit.transform));
             
         }
         Debug.DrawRay(playerCar.position, direction, Color.green, Mathf.Infinity);

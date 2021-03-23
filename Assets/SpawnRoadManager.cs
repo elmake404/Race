@@ -5,35 +5,37 @@ using UnityEngine;
 public class SpawnRoadManager : MonoBehaviour
 {
     public Transform spawnPoint;
+    public Transform swapTilePoint;
     private AccesToObjectsLinks accesToObjectsLinks;
     [HideInInspector] public Vector3 boundsRoadTile;
     [HideInInspector] public GameObject lastSpawnedRoadTiles;
-    
+    [HideInInspector] public Queue<GameObject> queueRoadTiles;
+    [HideInInspector] public Vector3 posSpawnRoad;
+    [HideInInspector] public float travelPath;
 
     private void Start()
     {
+        queueRoadTiles = new Queue<GameObject>();
         accesToObjectsLinks = FindObjectOfType<AccesToObjectsLinks>();
         lastSpawnedRoadTiles = new GameObject();
         boundsRoadTile = accesToObjectsLinks.bigRoadTile.GetComponent<Renderer>().bounds.size;
         Debug.Log(boundsRoadTile);
         GetInitialLastRoadTile();
+        Debug.Log(posSpawnRoad);
         //SpawnNewRoadTile();
     }
 
-    public void SpawnNewRoadTile(GameObject outInGameObject)
-    {
-        Vector3 posLastSpawnedRoadTile = lastSpawnedRoadTiles.transform.position;
-        Vector3 newPos = new Vector3 (0f,-0.16f, posLastSpawnedRoadTile.z + boundsRoadTile.z);
-
-        outInGameObject.transform.position = newPos;
-        lastSpawnedRoadTiles = outInGameObject;
-    }
 
     private void GetInitialLastRoadTile()
     {
         int childNumber = accesToObjectsLinks.CollectBigRoadTiled.transform.childCount;
-        lastSpawnedRoadTiles = accesToObjectsLinks.CollectBigRoadTiled.transform.GetChild(childNumber-1).gameObject;
-        //Debug.Log(lastSpawnedRoadTiles.name);
+        
+        for (int i = 0; i<childNumber; i++)
+        {
+            queueRoadTiles.Enqueue(accesToObjectsLinks.CollectBigRoadTiled.transform.GetChild(i).gameObject);
+            //Debug.Log(listRoadTiles[i].name);
+        }
+        posSpawnRoad = accesToObjectsLinks.CollectBigRoadTiled.transform.GetChild(childNumber-1).transform.position;
     }
 
 }
