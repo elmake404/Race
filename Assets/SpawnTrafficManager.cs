@@ -6,6 +6,7 @@ public class SpawnTrafficManager : MonoBehaviour
 {
     private PointsRailControll pointsRail;
     private TrafficCarContainer trafficCars;
+    private PlayerSpeedMove playerSpeed;
     [HideInInspector] public List<Transform> forwardDirectionPoints;
     [HideInInspector] public List<Transform> backWardDirectionPoints;
     private List<GameObject> trafficCarsGameObjects;
@@ -22,6 +23,7 @@ public class SpawnTrafficManager : MonoBehaviour
 
     void Start()
     {
+        playerSpeed = FindObjectOfType<PlayerSpeedMove>();
         pointsRail = FindObjectOfType<PointsRailControll>();
         forwardDirectionPoints = new List<Transform>() {pointsRail.listRailPoints[3], pointsRail.listRailPoints[4], pointsRail.listRailPoints[5] };
         backWardDirectionPoints = new List<Transform>() {pointsRail.listRailPoints[0], pointsRail.listRailPoints[1], pointsRail.listRailPoints[2] };
@@ -106,7 +108,8 @@ public class SpawnTrafficManager : MonoBehaviour
             GameObject newInstance = Instantiate(GetNextCarFromList(), GetRandomUnusedRailPoint(1).position + new Vector3(0f,0f,zOffsetSpawnTraffic), Quaternion.identity);
             newInstance.GetComponent<ControlSpawnedTrafficCar>().directionForwardOrBack = 1;
             newInstance.SetActive(true);
-            yield return new WaitForSeconds(4f);
+            float clampedSpeed = Mathf.Clamp(playerSpeed.multiplayerSpeed / (playerSpeed.maxSpeed / 10f), 1f, 10f);
+            yield return new WaitForSeconds(5f/clampedSpeed);
         }
         yield return null;
     }
@@ -121,7 +124,9 @@ public class SpawnTrafficManager : MonoBehaviour
             newInstance.GetComponent<ControlSpawnedTrafficCar>().directionForwardOrBack = -1;
             newInstance.SetActive(true);
             
-            yield return new WaitForSeconds(4f);
+            float clampedSpeed = Mathf.Clamp(playerSpeed.multiplayerSpeed/(playerSpeed.maxSpeed/10f), 1f, 10f);
+            //Debug.Log(clampedSpeed);
+            yield return new WaitForSeconds(5f/clampedSpeed);
         }
         yield return null;
     }

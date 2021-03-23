@@ -23,7 +23,7 @@ public class SpawnRoadManager : MonoBehaviour
     public void SpawnNewRoadTile(GameObject outInGameObject)
     {
         Vector3 posLastSpawnedRoadTile = lastSpawnedRoadTiles.transform.position;
-        Vector3 newPos = new Vector3 (0f,0f, posLastSpawnedRoadTile.z + boundsRoadTile.z);
+        Vector3 newPos = new Vector3 (0f,-0.16f, posLastSpawnedRoadTile.z + boundsRoadTile.z);
 
         outInGameObject.transform.position = newPos;
         lastSpawnedRoadTiles = outInGameObject;

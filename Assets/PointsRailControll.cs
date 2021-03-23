@@ -16,7 +16,7 @@ public class PointsRailControll : MonoBehaviour
     {
         Transform outNewPos;
         int changeIndex = currentPos + sideLeftRight;
-        Debug.Log(changeIndex);
+        //Debug.Log(changeIndex);
 
         if (changeIndex > (listRailPoints.Count - 1) | changeIndex < 0)
         {

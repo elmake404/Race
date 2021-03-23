@@ -45,45 +45,45 @@ public class SwipeController : MonoBehaviour
             if (angle > 0.375f && angle < 0.625f)
             {
                 direction = Swipes.Up;
-                Debug.Log("Up");
+                //Debug.Log("Up");
                 // Swipe down
             }
             else if (angle < -0.375f && angle > -0.625f)
             {
                 direction = Swipes.Down;
-                Debug.Log("Down");
+                //Debug.Log("Down");
                 // Swipe left
             }
             else if (angle < -0.875f || angle > 0.875f)
             {
                 direction = Swipes.Left;
-                Debug.Log("Left");
+                //Debug.Log("Left");
                 // Swipe right
             }
             else if (angle > -0.125f && angle < 0.125f)
             {
                 direction = Swipes.Right;
-                Debug.Log("Right");
+                //Debug.Log("Right");
             }
             else if (angle > 0.125f && angle < 0.375f)
             {
                 direction = Swipes.TopRight;
-                Debug.Log("top right");
+                //Debug.Log("top right");
             }
             else if (angle > 0.625f && angle < 0.875f)
             {
                 direction = Swipes.TopLeft;
-                Debug.Log("top left");
+                //Debug.Log("top left");
             }
             else if (angle < -0.125f && angle > -0.375f)
             {
                 direction = Swipes.BottomRight;
-                Debug.Log("bottom right");
+                //Debug.Log("bottom right");
             }
             else if (angle < -0.625f && angle > -0.875f)
             {
                 direction = Swipes.BottomLeft;
-                Debug.Log("bottom left");
+                //Debug.Log("bottom left");
             }
         }
 

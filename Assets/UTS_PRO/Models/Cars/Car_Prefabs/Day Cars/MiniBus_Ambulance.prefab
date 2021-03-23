@@ -108,7 +108,7 @@ Transform:
   m_Children:
   - {fileID: 4825258986129234}
   m_Father: {fileID: 4172428794191906}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1129817545910566
 GameObject:
@@ -139,7 +139,7 @@ Transform:
   m_Children:
   - {fileID: 4167736557661414}
   m_Father: {fileID: 4172428794191906}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1349944268585856
 GameObject:
@@ -328,7 +328,7 @@ Transform:
   m_Children:
   - {fileID: 4082266335575110}
   m_Father: {fileID: 4172428794191906}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1559239841216950
 GameObject:
@@ -505,6 +505,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4172428794191906}
   - component: {fileID: 9050946157605505964}
+  - component: {fileID: 883322427279783609}
   m_Layer: 9
   m_Name: MiniBus_Ambulance
   m_TagString: Car
@@ -524,6 +525,7 @@ Transform:
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
   - {fileID: 4011976771020364}
+  - {fileID: 5126653943566806730}
   - {fileID: 4608259981246038}
   - {fileID: 4131869208197440}
   - {fileID: 4226684956681238}
@@ -544,6 +546,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   directionForwardOrBack: 0
+--- !u!54 &883322427279783609
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659531230610606}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1939252615775942
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,5 +591,49 @@ Transform:
   m_Children:
   - {fileID: 4126539415312704}
   m_Father: {fileID: 4172428794191906}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5634362947497203493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5126653943566806730}
+  - component: {fileID: 4353598060279510601}
+  m_Layer: 0
+  m_Name: ChassiCollider
+  m_TagString: trafficCarColider
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5126653943566806730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5634362947497203493}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.59999996}
+  m_Children: []
+  m_Father: {fileID: 4172428794191906}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4353598060279510601
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5634362947497203493}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.2, y: 3.63, z: 10.59}
+  m_Center: {x: 0, y: 2.31, z: -1.41}
