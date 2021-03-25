@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class ScaleUpUnderCars : MonoBehaviour
 {
 
     private TimeScaleManager timeScale;
+    public LayerMask layerMask;
     private void Start()
     {
         timeScale = FindObjectOfType<TimeScaleManager>();
@@ -14,22 +16,16 @@ public class ScaleUpUnderCars : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 direction = new Vector3(playerCar.position.x, Vector3.up.y, playerCar.position.z) - playerCar.position;
-        if (Physics.BoxCast(new Vector3(playerCar.position.x, centerBox.y-10f, playerCar.position.z), sizeBox, direction, out hit, Quaternion.identity, 10f))
+        if (Physics.BoxCast(new Vector3(playerCar.position.x, centerBox.y-10f, playerCar.position.z), new Vector3(sizeBox.x/2f, sizeBox.y, sizeBox.z) , direction, out hit, Quaternion.identity, 10f, layerMask))
         {
-
-                Debug.Log("Explos");
+                
                 TrafficCarExplosion(hit.transform.GetComponent<Rigidbody>());
                 StartCoroutine(timeScale.StartSlowMotion(hit.transform));
-            
         }
-        Debug.DrawRay(playerCar.position, direction, Color.green, Mathf.Infinity);
+        
     }
 
-    /*private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(new Vector3 (transform.position.x, centerCastBox.y, transform.position.z), sizeCastBox);
-    }*/
+
     public void TrafficCarExplosion(Rigidbody rigidbody)
     {
         rigidbody.isKinematic = false;

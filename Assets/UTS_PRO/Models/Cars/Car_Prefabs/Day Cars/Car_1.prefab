@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4312916135134652}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wheels_RL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 4718325621998444}
   - component: {fileID: 33351805581544016}
   - component: {fileID: 23751827806970142}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wheels_FL_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4833775860496316}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wheels_FL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 4362258219068884}
   - component: {fileID: 33580099135219440}
   - component: {fileID: 23262483759839896}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wheels_RL_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,7 +235,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4411048394669386}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wheels_FR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,9 +269,10 @@ GameObject:
   - component: {fileID: 1469818584747085905}
   - component: {fileID: 1981751347176665103}
   - component: {fileID: 4559975269547413972}
-  m_Layer: 9
+  - component: {fileID: 6095310792516805245}
+  m_Layer: 8
   m_Name: Car_1
-  m_TagString: Car
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -287,6 +288,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
+  - {fileID: 7769267753507632625}
+  - {fileID: 9041121576406741465}
   - {fileID: 5082621822988536027}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -306,6 +309,14 @@ MonoBehaviour:
   springBodyObject: {fileID: 9016656965380959487}
   chassis: {fileID: 1784155751531590}
   wheelsContainer: {fileID: 5678020254418814698}
+  gameObjWithPlayerColider: {fileID: 4068809026417050915}
+  carBoxTrigger: {fileID: 8292122396490455705}
+  carBoxColider: {fileID: 9088346870406503785}
+  carRigidbody: {fileID: 1981751347176665103}
+  isPlayerScaled: 0
+  playerCarMeshBounds: {x: 0, y: 0, z: 0}
+  playerCarMeshCenter: {x: 0, y: 0, z: 0}
+  playerCarColider: {fileID: 6095310792516805245}
 --- !u!54 &1981751347176665103
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -334,6 +345,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e5f5adc5eb3c8148addbc545b0cf6a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &6095310792516805245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760368921295162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2017fe9a45cd94bb22cc12bc89e5ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setColiderPlayerCarState: 0
 --- !u!1 &1784155751531590
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,7 +372,7 @@ GameObject:
   - component: {fileID: 4047517439632164}
   - component: {fileID: 33510568586368714}
   - component: {fileID: 23598468964274832}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Car_1_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +455,7 @@ GameObject:
   - component: {fileID: 4023012920716458}
   - component: {fileID: 33333484797592206}
   - component: {fileID: 23916423178254846}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wheels_RR_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -508,7 +535,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4974709701712186}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wheels_RR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -541,7 +568,7 @@ GameObject:
   - component: {fileID: 4692704963455410}
   - component: {fileID: 33860145067080326}
   - component: {fileID: 23163329789873404}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wheels_FR_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -612,6 +639,50 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &4068809026417050915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9041121576406741465}
+  - component: {fileID: 9088346870406503785}
+  m_Layer: 8
+  m_Name: collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9041121576406741465
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4068809026417050915}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4728461719689158}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &9088346870406503785
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4068809026417050915}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.76, y: 1.42, z: 4.19}
+  m_Center: {x: 0, y: 0.74, z: 0}
 --- !u!1 &5678020254418814698
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,7 +693,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4543804542763911254}
   - component: {fileID: 5766703019652343027}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: wheels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -672,7 +743,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6482661877226676586}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: topPart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -694,6 +765,63 @@ Transform:
   m_Father: {fileID: 5082621822988536027}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6921584963345018136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7769267753507632625}
+  - component: {fileID: 8292122396490455705}
+  - component: {fileID: 148297040115559963}
+  m_Layer: 8
+  m_Name: trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7769267753507632625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921584963345018136}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4728461719689158}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8292122396490455705
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921584963345018136}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.76, y: 1.42, z: 4.19}
+  m_Center: {x: 0, y: 0.74, z: 0}
+--- !u!114 &148297040115559963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921584963345018136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e171d3c0c2c1e624196b02163a2ea844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7348571794368612894
 GameObject:
   m_ObjectHideFlags: 0
@@ -703,7 +831,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1871457564336577731}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: topStabilyzer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -733,7 +861,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3023338101131199941}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: rootStabilyzer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -764,7 +892,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5082621822988536027}
   - component: {fileID: 8798161811427105164}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SpringBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -786,7 +914,7 @@ Transform:
   - {fileID: 3023338101131199941}
   - {fileID: 1871457564336577731}
   m_Father: {fileID: 4728461719689158}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8798161811427105164
 MonoBehaviour:

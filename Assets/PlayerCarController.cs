@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+enum PlayerCarControllerState
+{
+    PlayerIsAlive = 0,
+    PlayerIsDead = 1
+}
+
 public class PlayerCarController : MonoBehaviour
 {
     private PointsRailControll pointsRail;
@@ -10,6 +16,7 @@ public class PlayerCarController : MonoBehaviour
     private ScaleUpUnderCars scaleUpUnderCars;
     public GameObject LinkToCreatedPlayerCar;
     [HideInInspector] public int currentPlayerRailIndex;
+    [HideInInspector] public int currentPlayerCarControllerState;
     private bool lastMoveLeftRightIenumerator;
     private bool lastScaleDownIsAlready;
     private bool lastScaleUpIsAlready;
@@ -21,15 +28,18 @@ public class PlayerCarController : MonoBehaviour
     private VirualCameraController playerCamera;
     private PlayerSpeedMove playerSpeed;
     private Vector3 defaultQuaternionCar;
-    private bool isCarSmallScale;
+    [HideInInspector] public bool isCarSmallScale;
     private Vector3 sizeCastBox;
     private Vector3 centerCastBox;
     private CarPropereties carPropereties;
     private TimeScaleManager timeScale;
+    
 
 
     void Start()
     {
+        currentPlayerCarControllerState = (int)PlayerCarControllerState.PlayerIsAlive;
+
         playerCamera = FindObjectOfType<VirualCameraController>();
 
         playerSpeed = FindObjectOfType<PlayerSpeedMove>();
@@ -64,12 +74,7 @@ public class PlayerCarController : MonoBehaviour
 
     void Update()
     {
-        SwitchActionSwipePlayerCar(SwipeController.direction);
-
-        
-        wheelsCar.transform.rotation = Quaternion.Euler(0f , springBody.localEulerAngles.z, -springBody.localEulerAngles.x) * Quaternion.Euler(new Vector3(0f, 0f, -playerSpeed.velocity/3f));
-        
-        
+        SwitchUpdatePlayerCarController(currentPlayerCarControllerState);
     }
 
     private void SpawnPlayerCar(GameObject carToSpawn, out GameObject newInstance)
@@ -133,7 +138,19 @@ public class PlayerCarController : MonoBehaviour
         //default: return null;
     }
 
+    private void SwitchUpdatePlayerCarController(int playerCarControllerState)
+    {
+        switch ((PlayerCarControllerState)playerCarControllerState)
+        {
+            case PlayerCarControllerState.PlayerIsAlive:
+                SwitchActionSwipePlayerCar(SwipeController.direction);
+                wheelsCar.transform.rotation = Quaternion.Euler(0f, springBody.localEulerAngles.z, -springBody.localEulerAngles.x - playerSpeed.velocity / 3f);
+                break;
 
+            case PlayerCarControllerState.PlayerIsDead:
+                break;
+        }
+    }
 
     private IEnumerator CarMoveLefRight(Transform destinationPoint, int sideLeftRight)
     {

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 515576247901056671}
   m_Layer: 9
   m_Name: Car_4
-  m_TagString: Car
+  m_TagString: trafficCar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,6 +51,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   directionForwardOrBack: 0
+  trafficCarRigidbody: {fileID: 0}
+  trafficCarState: 0
 --- !u!54 &515576247901056671
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -607,7 +609,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6101906892412639517}
   - component: {fileID: 7053396302899586883}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ChassiCollider
   m_TagString: trafficCarColider
   m_Icon: {fileID: 0}

@@ -6,14 +6,16 @@ public class TimeScaleManager : MonoBehaviour
 {
     private VirualCameraController cameraController;
     private Cinemachine.CinemachineBrain cinemachineBrain;
+    [HideInInspector] public bool isCarGrow;
     private void Start()
     {
         cameraController = FindObjectOfType<VirualCameraController>();
         cinemachineBrain = cameraController.transform.GetComponent<Cinemachine.CinemachineBrain>();
-        
+        isCarGrow = false;
     }
     public IEnumerator StartSlowMotion(Transform targetForCamera)
     {
+        isCarGrow = true;
         int currentActiveCamera = cinemachineBrain.ActiveVirtualCamera.Priority;
         int destroyedCamera = cameraController.destroyedCarCamera.Priority;
         float originalFixedDeltaTime = Time.fixedDeltaTime;
@@ -27,7 +29,20 @@ public class TimeScaleManager : MonoBehaviour
         cameraController.destroyedCarCamera.Priority = -1;
         Time.timeScale = 1f;
         Time.fixedDeltaTime = originalFixedDeltaTime;
+        isCarGrow = false;
+        yield return null;
+    }
 
+    public IEnumerator StartPlayerDeathCam()
+    {
+        cameraController.playerNormalScaleCamera.Follow = null;
+        //cameraController.playerNormalScaleCamera.LookAt = null;
+        float originalFixedDeltaTime = Time.fixedDeltaTime;
+        Time.timeScale = 0.05f;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        yield return new WaitForSecondsRealtime(3f);
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = originalFixedDeltaTime;
         yield return null;
     }
 }
