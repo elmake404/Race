@@ -7,6 +7,7 @@ public class VirualCameraController : MonoBehaviour
     public Cinemachine.CinemachineVirtualCamera playerNormalScaleCamera;
     public Cinemachine.CinemachineVirtualCamera playerSmallScaleCamera;
     public Cinemachine.CinemachineVirtualCamera destroyedCarCamera;
+    public Cinemachine.CinemachineVirtualCamera whenPlayerBigCamera;
     void Start()
     {
         

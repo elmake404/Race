@@ -21,8 +21,7 @@ public class SpawnRoadManager : MonoBehaviour
         boundsRoadTile = accesToObjectsLinks.bigRoadTile.GetComponent<Renderer>().bounds.size;
         Debug.Log(boundsRoadTile);
         GetInitialLastRoadTile();
-        Debug.Log(posSpawnRoad);
-        //SpawnNewRoadTile();
+        
     }
 
 
@@ -33,7 +32,7 @@ public class SpawnRoadManager : MonoBehaviour
         for (int i = 0; i<childNumber; i++)
         {
             queueRoadTiles.Enqueue(accesToObjectsLinks.CollectBigRoadTiled.transform.GetChild(i).gameObject);
-            //Debug.Log(listRoadTiles[i].name);
+            
         }
         posSpawnRoad = accesToObjectsLinks.CollectBigRoadTiled.transform.GetChild(childNumber-1).transform.position;
     }

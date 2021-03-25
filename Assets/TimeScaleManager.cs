@@ -7,8 +7,11 @@ public class TimeScaleManager : MonoBehaviour
     private VirualCameraController cameraController;
     private Cinemachine.CinemachineBrain cinemachineBrain;
     [HideInInspector] public bool isCarGrow;
+    [HideInInspector] public int priorityBigCamera;
+    [HideInInspector] public int priorityCurrentActiveCamera;
     private void Start()
     {
+        //priorityBigCamera = cameraController.whenPlayerBigCamera.Priority;
         cameraController = FindObjectOfType<VirualCameraController>();
         cinemachineBrain = cameraController.transform.GetComponent<Cinemachine.CinemachineBrain>();
         isCarGrow = false;
@@ -45,4 +48,21 @@ public class TimeScaleManager : MonoBehaviour
         Time.fixedDeltaTime = originalFixedDeltaTime;
         yield return null;
     }
+
+    public void SetBigCamera(GameObject Link)
+    {
+        priorityBigCamera = cameraController.whenPlayerBigCamera.Priority;
+        priorityCurrentActiveCamera =  cinemachineBrain.ActiveVirtualCamera.Priority;
+        cameraController.whenPlayerBigCamera.Priority = priorityCurrentActiveCamera + 1;
+        cameraController.whenPlayerBigCamera.LookAt = Link.transform;
+        cameraController.whenPlayerBigCamera.Follow = Link.transform;
+
+    }
+
+    public void UnsetBigCamera()
+    {
+        cameraController.whenPlayerBigCamera.Priority = priorityBigCamera;
+    }
+
+
 }

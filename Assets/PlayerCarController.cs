@@ -5,7 +5,8 @@ using UnityEngine;
 enum PlayerCarControllerState
 {
     PlayerIsAlive = 0,
-    PlayerIsDead = 1
+    PlayerIsDead = 1,
+    PlayerCatchBonus = 2
 }
 
 public class PlayerCarController : MonoBehaviour
@@ -14,12 +15,14 @@ public class PlayerCarController : MonoBehaviour
     private AccesToObjectsLinks accesToObjectsLinks;
     private CarPropereties playerCarPropereties;
     private ScaleUpUnderCars scaleUpUnderCars;
-    public GameObject LinkToCreatedPlayerCar;
+    [HideInInspector]public GameObject LinkToCreatedPlayerCar;
     [HideInInspector] public int currentPlayerRailIndex;
+    [HideInInspector] public int currentPlayerRailBonusIndex;
     [HideInInspector] public int currentPlayerCarControllerState;
     private bool lastMoveLeftRightIenumerator;
     private bool lastScaleDownIsAlready;
     private bool lastScaleUpIsAlready;
+    private bool lastMoveLeftRightWhenBigIsAlready;
     private GameObject chassisPlayerCar;
     private GameObject wheelsCar;
     private GameObject springBodyPlayerCar;
@@ -33,17 +36,23 @@ public class PlayerCarController : MonoBehaviour
     private Vector3 centerCastBox;
     private CarPropereties carPropereties;
     private TimeScaleManager timeScale;
+    private BonusPointsRailControl bonusPointsRail;
+    private PlayerDeath playerDeath;
+    private PlayerCarColider playerCarColider;
+    public LayerMask layerMaskOnBonus;
+    private HashSet<Collider> usedColliderInBonus;
+    private Cinemachine.CinemachineBrain cinemachineBrain;
     
-
-
     void Start()
     {
+
+        usedColliderInBonus = new HashSet<Collider>();
         currentPlayerCarControllerState = (int)PlayerCarControllerState.PlayerIsAlive;
 
         playerCamera = FindObjectOfType<VirualCameraController>();
-
+        cinemachineBrain = FindObjectOfType<Cinemachine.CinemachineBrain>();
         playerSpeed = FindObjectOfType<PlayerSpeedMove>();
-
+        bonusPointsRail = FindObjectOfType<BonusPointsRailControl>();
         pointsRail = FindObjectOfType<PointsRailControll>();
         accesToObjectsLinks = FindObjectOfType<AccesToObjectsLinks>();
         timeScale = FindObjectOfType<TimeScaleManager>();
@@ -53,6 +62,8 @@ public class PlayerCarController : MonoBehaviour
 
         isCarSmallScale = false;
         playerCarPropereties = LinkToCreatedPlayerCar.GetComponent<CarPropereties>();
+        playerCarColider = LinkToCreatedPlayerCar.GetComponent<PlayerCarColider>();
+        playerDeath = playerCarPropereties.carBoxTrigger.transform.GetComponent<PlayerDeath>();
         scaleUpUnderCars = LinkToCreatedPlayerCar.GetComponent<ScaleUpUnderCars>();
         chassisPlayerCar = playerCarPropereties.chassis;
         wheelsCar = playerCarPropereties.wheelsContainer;
@@ -69,14 +80,24 @@ public class PlayerCarController : MonoBehaviour
         playerCamera.playerNormalScaleCamera.LookAt = LinkToCreatedPlayerCar.transform;
         playerCamera.playerSmallScaleCamera.Follow = LinkToCreatedPlayerCar.transform;
         playerCamera.playerSmallScaleCamera.LookAt = LinkToCreatedPlayerCar.transform;
+        StartCoroutine(StartInitialBonusWork());
     }
 
 
     void Update()
     {
         SwitchUpdatePlayerCarController(currentPlayerCarControllerState);
+        
+        //Debug.Log(currentPlayerCarControllerState);
     }
 
+    private void FixedUpdate()
+    {
+        if (currentPlayerCarControllerState == (int)PlayerCarControllerState.PlayerCatchBonus)
+        {
+            MakeTrafficCarsIsRigidbody();
+        }
+    }
     private void SpawnPlayerCar(GameObject carToSpawn, out GameObject newInstance)
     {
         newInstance = Instantiate(carToSpawn, pointsRail.listRailPoints[3].position, Quaternion.identity);
@@ -94,6 +115,7 @@ public class PlayerCarController : MonoBehaviour
 
                 if (lastMoveLeftRightIenumerator == false & isCarSmallScale == false)
                 {
+                    //Debug.Log("Left");
                     StartCoroutine(CarMoveLefRight(pointsRail.GetNearRail(currentPlayerRailIndex,-1),-1)) ;
                 }
                 
@@ -102,6 +124,7 @@ public class PlayerCarController : MonoBehaviour
 
                 if (lastMoveLeftRightIenumerator == false & isCarSmallScale == false)
                 {
+                    //Debug.Log("Right");
                     StartCoroutine(CarMoveLefRight(pointsRail.GetNearRail(currentPlayerRailIndex, 1), 1));
                 }
 
@@ -112,7 +135,7 @@ public class PlayerCarController : MonoBehaviour
                 {
                     StartCoroutine(CarScaleUp());
                     scaleUpUnderCars.CheckCarOnTop(LinkToCreatedPlayerCar.transform, centerCastBox, sizeCastBox);
-                    isCarSmallScale = false;
+                    //isCarSmallScale = false;
                     playerSpeed.targetSpeed = playerSpeed.maxSpeed;
                     playerSpeed.damping = playerSpeed.normalDamping;
                     playerCamera.playerNormalScaleCamera.Priority = 1;
@@ -135,26 +158,53 @@ public class PlayerCarController : MonoBehaviour
                 break;
         }
 
+        
         //default: return null;
     }
 
-    private void SwitchUpdatePlayerCarController(int playerCarControllerState)
+    public void SwitchActionSwipePlayerCarWhenBig(Swipes swipe)
+    {
+        switch (swipe)
+        {
+            case Swipes.Left:
+                if(lastMoveLeftRightWhenBigIsAlready == false)
+                {
+                    StartCoroutine(CarMoveLefRightWhenBig(bonusPointsRail.GetNearPoint(1, currentPlayerRailBonusIndex), 1));
+                }
+                    
+                break;
+            case Swipes.Right:
+                if (lastMoveLeftRightWhenBigIsAlready == false)
+                {
+                    StartCoroutine(CarMoveLefRightWhenBig(bonusPointsRail.GetNearPoint(-1, currentPlayerRailBonusIndex), -1));
+                }
+                    
+                break;
+        }
+    }
+
+        private void SwitchUpdatePlayerCarController(int playerCarControllerState)
     {
         switch ((PlayerCarControllerState)playerCarControllerState)
         {
             case PlayerCarControllerState.PlayerIsAlive:
+                //Debug.Log((int)PlayerCarControllerState.PlayerIsAlive);
                 SwitchActionSwipePlayerCar(SwipeController.direction);
                 wheelsCar.transform.rotation = Quaternion.Euler(0f, springBody.localEulerAngles.z, -springBody.localEulerAngles.x - playerSpeed.velocity / 3f);
                 break;
 
             case PlayerCarControllerState.PlayerIsDead:
+
+                break;
+            case PlayerCarControllerState.PlayerCatchBonus:
+                SwitchActionSwipePlayerCarWhenBig(SwipeController.direction);
                 break;
         }
     }
 
     private IEnumerator CarMoveLefRight(Transform destinationPoint, int sideLeftRight)
     {
-
+        
         if (destinationPoint == null)
         {
             yield return null;
@@ -170,6 +220,11 @@ public class PlayerCarController : MonoBehaviour
 
             for (float i = 0f; i <= 10f; i += 50f * Time.deltaTime)
             {
+                if (playerDeath.isPlayerDead == true)
+                {
+                    yield return null;
+                    break;
+                }
                 LinkToCreatedPlayerCar.transform.position = Vector3.Lerp(startPos, endPos, i / 10f);
                 yield return new WaitForEndOfFrame();
             }
@@ -177,6 +232,31 @@ public class PlayerCarController : MonoBehaviour
             lastMoveLeftRightIenumerator = false;
         }
         
+        yield return null;
+    }
+
+    private IEnumerator CarMoveLefRightWhenBig(Transform destinationPoint, int sideLeftRight)
+    {
+        
+        if (destinationPoint == null)
+        {
+            yield return null;
+        }
+
+        else
+        {
+            lastMoveLeftRightWhenBigIsAlready = true;
+            currentPlayerRailBonusIndex += sideLeftRight;
+            Vector3 startPos = LinkToCreatedPlayerCar.transform.position;
+            Vector3 endPos = destinationPoint.position;
+            lastMoveLeftRightIenumerator = true;
+            for (float i = 0f; i <= 10f; i += 50f * Time.deltaTime)
+            {
+                LinkToCreatedPlayerCar.transform.position = Vector3.Lerp(startPos, endPos, i / 10f);
+                yield return new WaitForEndOfFrame();
+            }
+            lastMoveLeftRightWhenBigIsAlready = false;
+        }
         yield return null;
     }
 
@@ -193,6 +273,7 @@ public class PlayerCarController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         lastScaleUpIsAlready = false;
+        
         yield return null;
     }
 
@@ -209,6 +290,73 @@ public class PlayerCarController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         lastScaleDownIsAlready = false;
+        isCarSmallScale = false;
         yield return null;
+    }
+
+
+    public IEnumerator StartInitialBonusWork()
+    {
+        yield return new WaitForSecondsRealtime(10f);
+        yield return new WaitWhile(()=> lastMoveLeftRightIenumerator == true);
+        yield return new WaitWhile(()=> isCarSmallScale == true);
+        playerDeath.currentPlayerTriggerResponsibilities = (int)PlayerTriggerResponsibilities.playerCatchBonus;
+        timeScale.SetBigCamera(LinkToCreatedPlayerCar);
+        playerCarColider.setColiderPlayerCarState = (int)ColiderPlayerCarState.playerIsBig;
+        playerCarPropereties.carBoxColider.enabled = true;
+        Vector3 targetPos = bonusPointsRail.GetInitialStartBonusPoint(pointsRail.listRailPoints[currentPlayerRailIndex], out currentPlayerRailBonusIndex).position;
+        Vector3 targetScale = LinkToCreatedPlayerCar.transform.localScale * 2f;
+        Vector3 currentPos = LinkToCreatedPlayerCar.transform.position;
+        Vector3 currentScale = LinkToCreatedPlayerCar.transform.localScale;
+        currentPlayerCarControllerState = (int)PlayerCarControllerState.PlayerCatchBonus;
+        for (float i = 0f; i <= 10f; i += 50f * Time.deltaTime)
+        {
+            LinkToCreatedPlayerCar.transform.position = Vector3.Lerp(currentPos, targetPos, i/10f);
+            LinkToCreatedPlayerCar.transform.localScale = Vector3.Lerp(currentScale, targetScale, i / 10f);
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return new WaitForSecondsRealtime(10f);
+        StartCoroutine(EndOfActionBonusWork(currentScale));
+        yield return null;
+    }
+
+    public IEnumerator EndOfActionBonusWork(Vector3 normalScale)
+    {
+        Vector3 currentScale = LinkToCreatedPlayerCar.transform.localScale;
+        Vector3 currentPos = LinkToCreatedPlayerCar.transform.position;
+        Vector3 targetPos = bonusPointsRail.GetOutNormalRailPoint(currentPlayerRailBonusIndex, out currentPlayerRailIndex).position;
+
+        for (float i = 0f; i <= 10f; i += 50f * Time.deltaTime)
+        {
+            LinkToCreatedPlayerCar.transform.position = Vector3.Lerp(currentPos, targetPos, i / 10f);
+            LinkToCreatedPlayerCar.transform.localScale = Vector3.Lerp(currentScale, normalScale, i / 10f);
+            yield return new WaitForEndOfFrame();
+        }
+        timeScale.UnsetBigCamera();
+        lastMoveLeftRightIenumerator = false;
+        isCarSmallScale = false;
+        playerCarColider.setColiderPlayerCarState = (int)ColiderPlayerCarState.playerIsAlive;
+        currentPlayerCarControllerState = (int)PlayerCarControllerState.PlayerIsAlive;
+        playerCarPropereties.carBoxColider.enabled = false;
+        playerDeath.currentPlayerTriggerResponsibilities = (int)PlayerTriggerResponsibilities.playerWaitForDie;
+        yield return null;
+    }
+
+    private void MakeTrafficCarsIsRigidbody()
+    {
+        Collider[] hitColliders = Physics.OverlapBox(LinkToCreatedPlayerCar.transform.position, new Vector3(sizeCastBox.x, sizeCastBox.y, sizeCastBox.z*1.5f), Quaternion.identity, layerMaskOnBonus);
+        for (int i = 0; i < hitColliders.Length; i++)
+        {
+            if (usedColliderInBonus.Add(hitColliders[i]))
+            {
+                Rigidbody currentRigidbody = hitColliders[i].attachedRigidbody;
+                ControlSpawnedTrafficCar controlSpawnedTrafficCar = hitColliders[i].transform.parent.GetComponent<ControlSpawnedTrafficCar>();
+                controlSpawnedTrafficCar.trafficCarState = (int)TrafficCarState.playerIsDead;
+                currentRigidbody.isKinematic = false;
+                currentRigidbody.useGravity = true;
+                currentRigidbody.AddExplosionForce(20f, LinkToCreatedPlayerCar.transform.position, 0, 20f, ForceMode.Impulse);
+            }
+        }
     }
 }

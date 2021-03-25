@@ -5,16 +5,19 @@ using UnityEngine;
 enum ColiderPlayerCarState
 {
     playerIsAlive = 0,
-    playerIsDead = 1
+    playerIsDead = 1,
+    playerIsBig = 2
 }
 
 public class PlayerCarColider : MonoBehaviour
 {
     private HashSet<Collider> usedColider;
+    private HashSet<Collider> usedColiderIsBigPlayer;
     [HideInInspector] public int setColiderPlayerCarState;
     private void OnEnable()
     {
         usedColider = new HashSet<Collider>();
+        usedColiderIsBigPlayer = new HashSet<Collider>();
         setColiderPlayerCarState = (int)ColiderPlayerCarState.playerIsAlive;
     }
     private void OnCollisionEnter(Collision collision)
@@ -35,18 +38,18 @@ public class PlayerCarColider : MonoBehaviour
             case ColiderPlayerCarState.playerIsDead:
                 MakeColidedTafficCarsDestroyed(collision);
                 break;
+            case ColiderPlayerCarState.playerIsBig:
+                
+                break;
         }
     }
 
     private void MakeColidedTafficCarsDestroyed(Collision collision)
     {
-        //Debug.Log("1");
         foreach (ContactPoint contact in collision.contacts)
         {
-            //Debug.Log("2");
             if (contact.otherCollider.transform.tag == "trafficCarColider")
             {
-                //Debug.Log("3");
                 if (usedColider.Add(contact.otherCollider))
                 {
                     Rigidbody rigidbody = contact.otherCollider.transform.parent.GetComponent<Rigidbody>();
@@ -57,8 +60,7 @@ public class PlayerCarColider : MonoBehaviour
                     rigidbody.AddExplosionForce(5f, this.transform.position, 0, 5f, ForceMode.Impulse);
                 }
             }
-            
-            
         }
     }
+    
 }

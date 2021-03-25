@@ -43,3 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d91b8161ab96cbf479cf73c87fd35e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LinkToCreatedPlayerCar: {fileID: 0}
+  currentPlayerRailIndex: 0
+  currentPlayerRailBonusIndex: 0
+  currentPlayerCarControllerState: 0
+  isCarSmallScale: 0
+  layerMaskOnBonus:
+    serializedVersion: 2
+    m_Bits: 512

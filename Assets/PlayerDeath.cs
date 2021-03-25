@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+enum PlayerTriggerResponsibilities
+{
+    playerWaitForDie = 0,
+    playerCatchBonus = 1,
+
+}
 enum PlayerTriggerState
 {
     frontTriggerCollision = 0,
-    sideTriggerCollision = 1
+    sideTriggerCollision = 1,
+    
 
 }
 public class PlayerDeath : MonoBehaviour
@@ -17,11 +24,15 @@ public class PlayerDeath : MonoBehaviour
     private PlayerCarController playerCarController;
     private TimeScaleManager timeScaleManager;
     private HashSet<Collider> crashedColiders;
+    [HideInInspector] public int currentPlayerTriggerResponsibilities;
+    [HideInInspector] public bool isPlayerDead;
     
     
     private void OnEnable()
     {
         //isPlayerScaled = false;
+        isPlayerDead = false;
+        currentPlayerTriggerResponsibilities = (int)PlayerTriggerResponsibilities.playerWaitForDie;
         timeScaleManager = FindObjectOfType<TimeScaleManager>();
         playerSpeed = FindObjectOfType<PlayerSpeedMove>();
         playerCarController = FindObjectOfType<PlayerCarController>();
@@ -37,34 +48,21 @@ public class PlayerDeath : MonoBehaviour
         {
             return;
         }
-        if (other.tag == "trafficCarColider")
-        {
-            if (crashedColiders.Add(other))
-            {
-                float angle = Mathf.Abs(Vector3.Angle(transform.forward, other.transform.position - transform.position));
-                if (angle > 20)
-                {
-                    SwitchFrontOrSideTrigger(PlayerTriggerState.sideTriggerCollision, other);
-                }
-                else
-                {
-                    SwitchFrontOrSideTrigger(PlayerTriggerState.frontTriggerCollision, other);
-                }
-            }
-            
-        }
+        SwitchTriggerResponsibilities((PlayerTriggerResponsibilities)currentPlayerTriggerResponsibilities, other);
+        
     }
     private void SwitchFrontOrSideTrigger(PlayerTriggerState state, Collider other)
     {
         switch (state)
         {
             case PlayerTriggerState.frontTriggerCollision:
+                isPlayerDead = true;
                 other.transform.parent.GetComponent<ControlSpawnedTrafficCar>().MakeCarDestroyedWhenPlayerIsDead();
+                thisPlayerCarColider.enabled = true;
                 carPropereties.chassis.transform.SetParent(carPropereties.transform, true);
                 playerSpeed.currentPlayerSpeedMoveState = (int)PlayerSpeedMoveState.playerIsDead;
                 playerCarController.currentPlayerCarControllerState = (int)PlayerCarControllerState.PlayerIsDead;
                 carPropereties.playerCarColider.setColiderPlayerCarState = (int)ColiderPlayerCarState.playerIsDead;
-                thisPlayerCarColider.enabled = true;
                 //carPropereties.gameObjWithPlayerColider.SetActive(true);
                 thisPlayerCarRigidbody.isKinematic = false;
                 thisPlayerCarRigidbody.useGravity = true;
@@ -82,5 +80,31 @@ public class PlayerDeath : MonoBehaviour
                 break;
         }
     }
+    private void SwitchTriggerResponsibilities(PlayerTriggerResponsibilities state, Collider other)
+    {
+        switch (state)
+        {
+            case PlayerTriggerResponsibilities.playerWaitForDie:
+                if (other.tag == "trafficCarColider")
+                {
+                    if (crashedColiders.Add(other))
+                    {
+                        float angle = Mathf.Abs(Vector3.Angle(transform.forward, other.transform.position - transform.position));
+                        if (angle > 20)
+                        {
+                            SwitchFrontOrSideTrigger(PlayerTriggerState.sideTriggerCollision, other);
+                        }
+                        else
+                        {
+                            SwitchFrontOrSideTrigger(PlayerTriggerState.frontTriggerCollision, other);
+                        }
+                    }
 
+                }
+                break;
+            case PlayerTriggerResponsibilities.playerCatchBonus:
+                break;
+        }
+    }
+    
 }
