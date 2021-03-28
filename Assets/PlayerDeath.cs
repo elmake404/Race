@@ -24,12 +24,16 @@ public class PlayerDeath : MonoBehaviour
     private PlayerCarController playerCarController;
     private TimeScaleManager timeScaleManager;
     private HashSet<Collider> crashedColiders;
+    private ParticlesSpawnManger particlesSpawn;
+    private CanvasManager canvas;
     [HideInInspector] public int currentPlayerTriggerResponsibilities;
     [HideInInspector] public bool isPlayerDead;
     
     
     private void OnEnable()
     {
+        particlesSpawn = FindObjectOfType<ParticlesSpawnManger>();
+        canvas = FindObjectOfType<CanvasManager>();
         //isPlayerScaled = false;
         isPlayerDead = false;
         currentPlayerTriggerResponsibilities = (int)PlayerTriggerResponsibilities.playerWaitForDie;
@@ -67,15 +71,18 @@ public class PlayerDeath : MonoBehaviour
                 thisPlayerCarRigidbody.isKinematic = false;
                 thisPlayerCarRigidbody.useGravity = true;
                 transform.GetComponent<BoxCollider>().enabled = false;
+                particlesSpawn.SpawnBigExplosion(other.gameObject);
                 thisPlayerCarRigidbody.AddForce(transform.forward*50f, ForceMode.Impulse);
                 StartCoroutine(timeScaleManager.StartPlayerDeathCam());
                 break;
 
             case PlayerTriggerState.sideTriggerCollision:
                 Rigidbody otherRigidbody = other.transform.parent.GetComponent<Rigidbody>();
+                canvas.InvokeOnActionDestructOtherCars();
                 otherRigidbody.isKinematic = false;
                 otherRigidbody.useGravity = true;
                 StartCoroutine(timeScaleManager.StartSlowMotion(other.transform));
+                particlesSpawn.SpawnBigExplosion(other.gameObject);
                 otherRigidbody.AddExplosionForce(20f, this.transform.position, 0, 20f, ForceMode.Impulse);
                 break;
         }

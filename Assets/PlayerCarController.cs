@@ -42,6 +42,8 @@ public class PlayerCarController : MonoBehaviour
     public LayerMask layerMaskOnBonus;
     private HashSet<Collider> usedColliderInBonus;
     private Cinemachine.CinemachineBrain cinemachineBrain;
+    private ParticlesSpawnManger particlesSpawn;
+    private CanvasManager canvasManager;
     
     void Start()
     {
@@ -56,11 +58,14 @@ public class PlayerCarController : MonoBehaviour
         pointsRail = FindObjectOfType<PointsRailControll>();
         accesToObjectsLinks = FindObjectOfType<AccesToObjectsLinks>();
         timeScale = FindObjectOfType<TimeScaleManager>();
-
+        particlesSpawn = FindObjectOfType<ParticlesSpawnManger>();
+        canvasManager = FindObjectOfType<CanvasManager>();
 
         SpawnPlayerCar(accesToObjectsLinks.carSpaawnManager.carsList[1], out LinkToCreatedPlayerCar);
 
         isCarSmallScale = false;
+        timeScale.linnkToCratedPlayerCar = LinkToCreatedPlayerCar;
+        canvasManager.playerCarController = this;
         playerCarPropereties = LinkToCreatedPlayerCar.GetComponent<CarPropereties>();
         playerCarColider = LinkToCreatedPlayerCar.GetComponent<PlayerCarColider>();
         playerDeath = playerCarPropereties.carBoxTrigger.transform.GetComponent<PlayerDeath>();
@@ -80,7 +85,7 @@ public class PlayerCarController : MonoBehaviour
         playerCamera.playerNormalScaleCamera.LookAt = LinkToCreatedPlayerCar.transform;
         playerCamera.playerSmallScaleCamera.Follow = LinkToCreatedPlayerCar.transform;
         playerCamera.playerSmallScaleCamera.LookAt = LinkToCreatedPlayerCar.transform;
-        StartCoroutine(StartInitialBonusWork());
+        
     }
 
 
@@ -297,7 +302,7 @@ public class PlayerCarController : MonoBehaviour
 
     public IEnumerator StartInitialBonusWork()
     {
-        yield return new WaitForSecondsRealtime(10f);
+        //yield return new WaitForSecondsRealtime(10f);
         yield return new WaitWhile(()=> lastMoveLeftRightIenumerator == true);
         yield return new WaitWhile(()=> isCarSmallScale == true);
         playerDeath.currentPlayerTriggerResponsibilities = (int)PlayerTriggerResponsibilities.playerCatchBonus;
@@ -316,7 +321,7 @@ public class PlayerCarController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        yield return new WaitForSecondsRealtime(10f);
+        yield return new WaitForSeconds(10f);
         StartCoroutine(EndOfActionBonusWork(currentScale));
         yield return null;
     }
@@ -352,6 +357,7 @@ public class PlayerCarController : MonoBehaviour
             {
                 Rigidbody currentRigidbody = hitColliders[i].attachedRigidbody;
                 ControlSpawnedTrafficCar controlSpawnedTrafficCar = hitColliders[i].transform.parent.GetComponent<ControlSpawnedTrafficCar>();
+                particlesSpawn.SpawnBigExplosion(hitColliders[i].transform.parent.gameObject);
                 controlSpawnedTrafficCar.trafficCarState = (int)TrafficCarState.playerIsDead;
                 currentRigidbody.isKinematic = false;
                 currentRigidbody.useGravity = true;
@@ -359,4 +365,7 @@ public class PlayerCarController : MonoBehaviour
             }
         }
     }
+
+    public void StartCoroutineInitiAlBonusWork()
+    { StartCoroutine(StartInitialBonusWork()); }
 }

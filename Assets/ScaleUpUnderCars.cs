@@ -8,8 +8,12 @@ public class ScaleUpUnderCars : MonoBehaviour
 
     private TimeScaleManager timeScale;
     public LayerMask layerMask;
+    private ParticlesSpawnManger particlesSpawn;
+    private CanvasManager canvasManager;
     private void Start()
     {
+        canvasManager = FindObjectOfType<CanvasManager>();
+        particlesSpawn = FindObjectOfType<ParticlesSpawnManger>();
         timeScale = FindObjectOfType<TimeScaleManager>();
     }
     public void CheckCarOnTop(Transform playerCar, Vector3 centerBox, Vector3 sizeBox)
@@ -20,6 +24,8 @@ public class ScaleUpUnderCars : MonoBehaviour
         {
                 
                 TrafficCarExplosion(hit.transform.GetComponent<Rigidbody>());
+                canvasManager.InvokeOnActionDestructOtherCars();
+                particlesSpawn.SpawnBigExplosion(hit.transform.gameObject);
                 StartCoroutine(timeScale.StartSlowMotion(hit.transform));
         }
         
@@ -31,5 +37,6 @@ public class ScaleUpUnderCars : MonoBehaviour
         rigidbody.isKinematic = false;
         rigidbody.useGravity = true;
         rigidbody.AddExplosionForce(20f, this.transform.position, 0, 20f, ForceMode.Impulse);
+        
     }
 }
