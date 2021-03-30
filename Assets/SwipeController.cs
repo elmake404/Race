@@ -4,7 +4,7 @@ public enum Swipes { None, Up, Down, Left, TopLeft, BottomLeft, Right, TopRight,
 
 public class SwipeController : MonoBehaviour
 {
-    public float minSwipeLength = 200f;
+    public float minSwipeLength = 5f;
     Vector2 currentSwipe;
 
     private Vector2 fingerStart;

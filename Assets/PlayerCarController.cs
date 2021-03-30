@@ -44,6 +44,7 @@ public class PlayerCarController : MonoBehaviour
     private Cinemachine.CinemachineBrain cinemachineBrain;
     private ParticlesSpawnManger particlesSpawn;
     private CanvasManager canvasManager;
+    //private Vector3 saveNormalRotation;
     
     void Start()
     {
@@ -64,6 +65,8 @@ public class PlayerCarController : MonoBehaviour
         SpawnPlayerCar(accesToObjectsLinks.carSpaawnManager.carsList[1], out LinkToCreatedPlayerCar);
 
         isCarSmallScale = false;
+
+        //saveNormalRotation = new Vector3(90f,0f,0f);
         timeScale.linnkToCratedPlayerCar = LinkToCreatedPlayerCar;
         canvasManager.playerCarController = this;
         playerCarPropereties = LinkToCreatedPlayerCar.GetComponent<CarPropereties>();
@@ -193,15 +196,15 @@ public class PlayerCarController : MonoBehaviour
         switch ((PlayerCarControllerState)playerCarControllerState)
         {
             case PlayerCarControllerState.PlayerIsAlive:
-                //Debug.Log((int)PlayerCarControllerState.PlayerIsAlive);
                 SwitchActionSwipePlayerCar(SwipeController.direction);
-                wheelsCar.transform.rotation = Quaternion.Euler(0f, springBody.localEulerAngles.z, -springBody.localEulerAngles.x - playerSpeed.velocity / 3f);
+                wheelsCar.transform.rotation = Quaternion.Euler(0f, springBody.localEulerAngles.z, -springBody.localEulerAngles.x);
                 break;
 
             case PlayerCarControllerState.PlayerIsDead:
-
+                //wheelsCar.transform.rotation = Quaternion.Euler(saveNormalRotation);
                 break;
             case PlayerCarControllerState.PlayerCatchBonus:
+                wheelsCar.transform.rotation = Quaternion.Euler(0f, springBody.localEulerAngles.z, -springBody.localEulerAngles.x);
                 SwitchActionSwipePlayerCarWhenBig(SwipeController.direction);
                 break;
         }
@@ -307,6 +310,7 @@ public class PlayerCarController : MonoBehaviour
         yield return new WaitWhile(()=> isCarSmallScale == true);
         playerDeath.currentPlayerTriggerResponsibilities = (int)PlayerTriggerResponsibilities.playerCatchBonus;
         timeScale.SetBigCamera(LinkToCreatedPlayerCar);
+        carPropereties.wheelsContainer.transform.localRotation = Quaternion.Euler(90f, 90f, 90f);
         playerCarColider.setColiderPlayerCarState = (int)ColiderPlayerCarState.playerIsBig;
         playerCarPropereties.carBoxColider.enabled = true;
         Vector3 targetPos = bonusPointsRail.GetInitialStartBonusPoint(pointsRail.listRailPoints[currentPlayerRailIndex], out currentPlayerRailBonusIndex).position;

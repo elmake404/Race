@@ -73,18 +73,31 @@ public class BonusPointsRailControl : MonoBehaviour
     {
         Vector3[] positionsOfTwoPoints = new Vector3[] { point1.position, point2.position };
         int bestPointIndex = 0;
-        float biggestDistance = 1000f;
+        float biggestDistance = 0f;
         for (int i = 0; i < positionsOfTwoPoints.Length; i++)
         {
-            Vector3 direction = new Vector3(positionsOfTwoPoints[i].x, positionsOfTwoPoints[i].y+1f, positionsOfTwoPoints[i].z + 10f) - positionsOfTwoPoints[i];
-            Vector3 orign = new Vector3(positionsOfTwoPoints[i].x, positionsOfTwoPoints[i].y + 1f, positionsOfTwoPoints[i].z);
+            
+            Vector3 orign = new Vector3(positionsOfTwoPoints[i].x, positionsOfTwoPoints[i].y +0.5f, positionsOfTwoPoints[i].z - 10f);
+            Vector3 direction = new Vector3(positionsOfTwoPoints[i].x, positionsOfTwoPoints[i].y +0.5f, positionsOfTwoPoints[i].z + 10f) - orign;
             RaycastHit hit;
-            Physics.Raycast(orign, direction, out hit, layerMask);
-            if (hit.distance < biggestDistance)
+            Physics.Raycast(orign, direction, out hit, Mathf.Infinity, layerMask);
+            Debug.DrawRay(orign, direction,Color.red, Mathf.Infinity);
+            Debug.Log("distance " + hit.distance);
+            if (hit.distance > biggestDistance | hit.distance == 0f)
             {
-                biggestDistance = hit.distance;
-                bestPointIndex = i;
+                if (hit.distance == 0f)
+                {
+                    biggestDistance = 999f;
+                    bestPointIndex = i;
+                }
+                else
+                {
+                    biggestDistance = hit.distance;
+                    bestPointIndex = i;
+                }
+                
             }
+            
         }
 
         if (bestPointIndex == 0)

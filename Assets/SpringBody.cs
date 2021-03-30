@@ -11,6 +11,7 @@ public class SpringBody : MonoBehaviour
 	Vector3 stabVEL = new Vector3();
 	public float mass = 1;
 	private PlayerSpeedMove playerSpeed;
+	
 
 
 	public Vector3 localEulerAngles
@@ -29,8 +30,11 @@ public class SpringBody : MonoBehaviour
 		stabPOS = Vector3.Lerp(stabPOS, root_stabilizer.position, Time.deltaTime * 10 * mass) + stabVEL * 10 * mass * Time.deltaTime;
 		top_stabilizer.position = stabPOS;
 		top_part.rotation = Quaternion.Euler(new Vector3((top_stabilizer.localPosition.z - root_stabilizer.localPosition.z ), -(top_stabilizer.localPosition.x - root_stabilizer.localPosition.x),
-			-(top_stabilizer.localPosition.x - root_stabilizer.localPosition.x)) * 20 * mass) * Quaternion.Euler(new Vector3(-playerSpeed.velocity/3f,0f,0f));
+			-(top_stabilizer.localPosition.x - root_stabilizer.localPosition.x)) * 20 * mass) ;
 		stabVEL = Vector3.Lerp(stabVEL, root_stabilizer.position - stabPOS, Time.deltaTime * 15);
-		
+
+
+		// - playerSpeed.velocity / 3f
+		//* Quaternion.Euler(new Vector3(-playerSpeed.velocity/3f,0f,0f))
 	}
 }

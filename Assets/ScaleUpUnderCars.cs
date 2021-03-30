@@ -31,7 +31,6 @@ public class ScaleUpUnderCars : MonoBehaviour
         
     }
 
-
     public void TrafficCarExplosion(Rigidbody rigidbody)
     {
         rigidbody.isKinematic = false;

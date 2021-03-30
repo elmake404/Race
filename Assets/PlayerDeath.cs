@@ -63,6 +63,7 @@ public class PlayerDeath : MonoBehaviour
                 isPlayerDead = true;
                 other.transform.parent.GetComponent<ControlSpawnedTrafficCar>().MakeCarDestroyedWhenPlayerIsDead();
                 thisPlayerCarColider.enabled = true;
+                carPropereties.wheelsContainer.transform.localRotation = Quaternion.Euler(90f,90f,90f);
                 carPropereties.chassis.transform.SetParent(carPropereties.transform, true);
                 playerSpeed.currentPlayerSpeedMoveState = (int)PlayerSpeedMoveState.playerIsDead;
                 playerCarController.currentPlayerCarControllerState = (int)PlayerCarControllerState.PlayerIsDead;
@@ -73,6 +74,8 @@ public class PlayerDeath : MonoBehaviour
                 transform.GetComponent<BoxCollider>().enabled = false;
                 particlesSpawn.SpawnBigExplosion(other.gameObject);
                 thisPlayerCarRigidbody.AddForce(transform.forward*50f, ForceMode.Impulse);
+                FacebookManager.Instance.LevelFail(1);
+                StartCoroutine(canvas.VisibleMenuScore());
                 StartCoroutine(timeScaleManager.StartPlayerDeathCam());
                 break;
 

@@ -10,9 +10,12 @@ public class TimeScaleManager : MonoBehaviour
     [HideInInspector] public int priorityBigCamera;
     [HideInInspector] public int priorityCurrentActiveCamera;
     [HideInInspector] public GameObject linnkToCratedPlayerCar;
-    
+    [HideInInspector] public float originalFixedDeltaTime;
+
+
     private void Start()
     {
+        originalFixedDeltaTime = Time.fixedDeltaTime; 
         cameraController = FindObjectOfType<VirualCameraController>();
         cinemachineBrain = cameraController.transform.GetComponent<Cinemachine.CinemachineBrain>();
         isCarGrow = false;
@@ -22,7 +25,6 @@ public class TimeScaleManager : MonoBehaviour
         isCarGrow = true;
         int currentActiveCamera = cinemachineBrain.ActiveVirtualCamera.Priority;
         int destroyedCamera = cameraController.destroyedCarCamera.Priority;
-        float originalFixedDeltaTime = Time.fixedDeltaTime;
         cameraController.destroyedCarCamera.LookAt = targetForCamera;
         cameraController.destroyedCarCamera.Follow = linnkToCratedPlayerCar.transform;
         cameraController.destroyedCarCamera.Priority = currentActiveCamera + 1;

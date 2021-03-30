@@ -18,8 +18,8 @@ RenderSettings:
   m_FogColor: {r: 1, g: 0.8117647, b: 0.57254905, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.01
-  m_LinearFogStart: -20
-  m_LinearFogEnd: 400
+  m_LinearFogStart: 0
+  m_LinearFogEnd: 800
   m_AmbientSkyColor: {r: 0.8235294, g: 0.825674, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -222,6 +222,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 702035170468761325, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 764580497090771094, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 968274667796550012, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 968317843877098793, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 968863320050949124, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 969868591695960969, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3632559185866860928, guid: 9cf720d5d70b7b5438bf0967646c9b00,
         type: 3}
       propertyPath: m_Name
@@ -281,6 +311,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6427335185177301533, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817627791537723603, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7961603994349489589, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8935411658611902511, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129247868154988902, guid: 9cf720d5d70b7b5438bf0967646c9b00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cf720d5d70b7b5438bf0967646c9b00, type: 3}
@@ -480,8 +535,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.91181916, b: 0.7490196, a: 1}
-  m_Intensity: 1.2
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -490,7 +545,7 @@ Light:
     m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.582
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -989,7 +1044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 0.1, z: -0.67}
+  m_FollowOffset: {x: 0, y: 0.12, z: -0.67}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -1084,9 +1139,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 1
   m_FollowOffset: {x: 0, y: 1.5, z: -4.5}
-  m_XDamping: 1.5
+  m_XDamping: 1
   m_YDamping: 0
-  m_ZDamping: 1.5
+  m_ZDamping: 1
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
@@ -1750,7 +1805,7 @@ PrefabInstance:
     - target: {fileID: 1267783129243244712, guid: a431656c68eda0d4ea22a9bc10501ef8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 525
+      value: 524.976
       objectReference: {fileID: 0}
     - target: {fileID: 1267783129243244712, guid: a431656c68eda0d4ea22a9bc10501ef8,
         type: 3}
@@ -1780,7 +1835,7 @@ PrefabInstance:
     - target: {fileID: 2044513749876918599, guid: a431656c68eda0d4ea22a9bc10501ef8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 725.5
+      value: 723.6463
       objectReference: {fileID: 0}
     - target: {fileID: 2044513749876918599, guid: a431656c68eda0d4ea22a9bc10501ef8,
         type: 3}

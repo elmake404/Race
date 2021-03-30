@@ -11,30 +11,91 @@ public class CanvasManager : MonoBehaviour
     public Image whiteImageBar;
     public Text scoreText;
     public Button restartButton;
+    public Image darkBG;
+    public Image tutorialImage;
     [HideInInspector] public PlayerCarController playerCarController;
     public delegate void OnDestructOtherCars();
     public event OnDestructOtherCars onActionDestructOtherCars;
     [HideInInspector] public bool isBonusIsStart;
     private PlayerSpeedMove playerSpeedMove;
     private int totalDistance;
-
+    private TimeScaleManager timeScaleManager;
+    public GameObject endLevel;
+    public Text yourScore;
+    public Text bestScore;
+    public Button restartInEnd;
+    
 
     private void Start()
     {
         playerSpeedMove = FindObjectOfType<PlayerSpeedMove>();
-        
+        timeScaleManager = FindObjectOfType<TimeScaleManager>();
+
+        darkBG.enabled = false;
+        tutorialImage.enabled = false;
         //playerCarController = FindObjectOfType<PlayerCarController>();
         isBonusIsStart = false;
         normalStatusBar.fillAmount = 0.1f;
         completeImageBar.fillAmount = 0f;
         whiteImageBar.fillAmount = 0f;
         restartButton.onClick.AddListener(RestartScene);
-
+        restartInEnd.onClick.AddListener(RestartScene);
         onActionDestructOtherCars += StartCoroutineGrowNormalStatusBar;
         StartCoroutine(WaitFilledStatusBar());
         StartCoroutine(CalcDistance());
+
+        if (PlayerPrefs.GetInt("isGuide") == 0)
+        {
+            PlayerPrefs.SetInt("isGuide", 1);
+            StartCoroutine(GuideMenu());
+        }
+        
     }
 
+    public IEnumerator VisibleMenuScore()
+    {
+        yield return new WaitForSecondsRealtime(5f);
+        yourScore.text = scoreText.text;
+        if (PlayerPrefs.GetInt("bestScore") < totalDistance)
+        {
+            PlayerPrefs.SetInt("bestScore", totalDistance);
+            bestScore.text = totalDistance.ToString() + "m";
+        }
+        else
+        {
+            bestScore.text = PlayerPrefs.GetInt("bestScore") + "m";
+        }
+        endLevel.SetActive(true);
+        yield return null;
+    }
+
+    private IEnumerator GuideMenu()
+    {
+        yield return new WaitForSeconds(3f);
+        darkBG.enabled = true;
+        tutorialImage.enabled = true;
+        Time.timeScale = 0.05f;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        for (float i = 0f; i < 1f; i += Time.unscaledDeltaTime)
+        {
+            darkBG.color = new Color(0f,0f,0f,Mathf.Lerp(0f,0.5f, i));
+            tutorialImage.color = new Color(255f, 255f, 255f, Mathf.Lerp(0f, 1f, i));
+            yield return new WaitForEndOfFrame();
+        }
+        yield return new WaitForSecondsRealtime(3f);
+        for (float i = 0f; i < 1f; i += Time.unscaledDeltaTime)
+        {
+            darkBG.color = new Color(0f, 0f, 0f, Mathf.Lerp(0.5f, 0f, i));
+            tutorialImage.color = new Color(255f, 255f, 255f, Mathf.Lerp(1f, 0f, i));
+            yield return new WaitForEndOfFrame();
+        }
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = timeScaleManager.originalFixedDeltaTime;
+        darkBG.enabled = false;
+        tutorialImage.enabled = false;
+
+        yield return null;
+    }
     private IEnumerator CalcDistance()
     {
         
@@ -51,7 +112,7 @@ public class CanvasManager : MonoBehaviour
 
     public IEnumerator GrowNormalStatusBar()
     {
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitForSeconds(1f);
         if (normalStatusBar.fillAmount >= 0.9f)
         {
             yield return null;
@@ -69,8 +130,8 @@ public class CanvasManager : MonoBehaviour
                 normalStatusBar.fillAmount = 0.1f;
                 break;
             }
-            offset += Time.deltaTime/2f;
-            normalStatusBar.fillAmount += Time.deltaTime/2f;
+            offset += Time.unscaledDeltaTime/2f;
+            normalStatusBar.fillAmount += Time.unscaledDeltaTime/2f;
             yield return new WaitForEndOfFrame();
         }
         
@@ -116,6 +177,9 @@ public class CanvasManager : MonoBehaviour
 
     private void RestartScene()
     {
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = timeScaleManager.originalFixedDeltaTime;
         SceneManager.LoadScene(1,LoadSceneMode.Single);
+
     }
 }
